@@ -1,0 +1,355 @@
+@import "tailwindcss";
+
+/* Tailwind v4 gates hover: behind @media (hover: hover), which disables all
+   hover effects on touch devices (phones/tablets). Restore v3 behavior so
+   hover works everywhere, matching the reference site. */
+@custom-variant hover (&:hover);
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --primary: #2563eb;
+  --primary-soft: rgba(37, 99, 235, 0.14);
+  --accent: #06b6d4;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: rgba(37, 99, 235, 0.3);
+  --glow: rgba(37, 99, 235, 0.5);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --animate-view-enter: view-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  --color-ink: #0c141d;
+  --color-muted-fg: #67707b;
+  --color-line: hsl(214 32% 91%);
+}
+
+@keyframes view-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    /* No transform here: with fill-mode "both", any residual transform would keep the root as a containing block for position:fixed children (breaks fixed mobile nav). */
+  }
+}
+
+.font-app-sans {
+  font-family: var(--font-work-sans), "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+}
+
+.font-app-display {
+  font-family: var(--font-work-sans), "Trebuchet MS", "Arial Black", ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-app-mono {
+  font-family: ui-monospace, "Cascadia Code", "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+.font-app-serif {
+  font-family: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
+}
+
+.font-app-playfair {
+  font-family: var(--font-playfair), Georgia, "Times New Roman", serif;
+}
+
+.font-app-inter {
+  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+}
+
+.bg-gradient-hero {
+  background-image: linear-gradient(
+    135deg,
+    #13316c 0%,
+    #1259a1 15%,
+    #11a4d4 35%,
+    #25f4f4 60%,
+    #42f0d3 85%,
+    #5eedbe 100%
+  );
+}
+
+.bg-gradient-subtle {
+  background-image: linear-gradient(180deg, #ffffff 0%, #fcfcfd 30%, #f5f7fb 70%, #eff2f6 100%);
+}
+
+.bg-gradient-card {
+  background-image: linear-gradient(145deg, #ffffff 0%, #fcfcfd 50%, #f8fafb 100%);
+}
+
+.bg-gradient-ocean {
+  background-image: linear-gradient(135deg, hsl(195 100% 85%) 0%, hsl(200 95% 47%) 100%);
+}
+
+.bg-gradient-premium {
+  background-image: linear-gradient(
+    135deg,
+    hsl(262 83% 58% / 0.05) 0%,
+    hsl(217 91% 60% / 0.08) 50%,
+    hsl(263 85% 70% / 0.05) 100%
+  );
+}
+
+.bg-gradient-travel {
+  background-image: linear-gradient(
+    135deg,
+    hsl(214 84% 56% / 0.03) 0%,
+    #ffffff 50%,
+    hsl(217 91% 60% / 0.03) 100%
+  );
+}
+
+.bg-gradient-social {
+  background-image: linear-gradient(135deg, hsl(210 40% 96%) 0%, #ffffff 100%);
+}
+
+.bg-gradient-pricing {
+  background-image: linear-gradient(
+    135deg,
+    hsl(210 40% 96% / 0.1) 0%,
+    #ffffff 50%,
+    #ffffff 100%
+  );
+}
+
+.shadow-elegant {
+  box-shadow:
+    0 32px 64px -12px rgba(0, 0, 0, 0.25),
+    0 25px 25px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.shadow-soft {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-feature {
+  box-shadow:
+    0 25px 50px -12px rgba(59, 130, 246, 0.25),
+    0 0 0 1px rgba(59, 130, 246, 0.08);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Tailwind v4 dropped the v3 preflight rule that gave buttons a hand cursor.
+   Restore it so every interactive element shows the pointer, like the
+   reference site. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  a:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+.text-app-text {
+  color: var(--text);
+}
+.text-app-muted {
+  color: var(--muted);
+}
+.bg-app-bg {
+  background-color: var(--bg);
+}
+.bg-app-surface {
+  background-color: var(--surface);
+}
+.bg-app-primary {
+  background-color: var(--primary);
+}
+.text-app-primary {
+  color: var(--primary);
+}
+.border-app {
+  border-color: var(--border);
+}
+.bg-app-primary-soft {
+  background-color: var(--primary-soft);
+}
+
+.app-glow-input {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.app-glow-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow:
+    0 0 0 3px var(--primary-soft),
+    0 0 24px var(--glow);
+}
+
+@keyframes app-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.app-fade-in {
+  animation: app-fade-in 0.35s ease both;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+@keyframes scrollDot {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(9px); }
+}
+.scroll-dot {
+  animation: scrollDot 1.6s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes hero-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(-3%, -2%, 0) scale(1.08); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes hero-drift-reverse {
+  0%   { transform: translate3d(0, 0, 0) scale(1.05); }
+  50%  { transform: translate3d(3%, 2%, 0) scale(1); }
+  100% { transform: translate3d(0, 0, 0) scale(1.05); }
+}
+@keyframes hero-pulse {
+  0%, 100% { opacity: 0.25; transform: scale(1); }
+  50%      { opacity: 0.45; transform: scale(1.05); }
+}
+
+@keyframes app-cursor-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+.app-stream-cursor::after {
+  content: "▍";
+  margin-left: 2px;
+  color: var(--primary);
+  animation: app-cursor-blink 0.9s step-end infinite;
+}
+
+.md > *:first-child {
+  margin-top: 0;
+}
+.md > *:last-child {
+  margin-bottom: 0;
+}
+.md h1 {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 8px 0 16px;
+  color: var(--text);
+}
+.md h2 {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 24px 0 8px;
+  color: var(--primary);
+}
+.md h3 {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 16px 0 4px;
+  color: var(--text);
+}
+.md p {
+  margin: 0 0 12px;
+  color: var(--text);
+}
+.md ul,
+.md ol {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  color: var(--text);
+}
+.md li {
+  margin: 4px 0;
+  line-height: 1.55;
+}
+.md strong {
+  font-weight: 600;
+  color: var(--text);
+}
+.md em {
+  font-style: italic;
+}
+.md hr {
+  margin: 24px 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+.md code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-radius: 6px;
+  padding: 1px 5px;
+}
+.md pre {
+  margin: 12px 0;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--primary-soft);
+  overflow-x: auto;
+}
+.md table {
+  width: 100%;
+  margin: 0 0 16px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.md th,
+.md td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+.md th {
+  font-weight: 600;
+  color: var(--text);
+  background: var(--primary-soft);
+}
+.md td {
+  color: var(--text);
+}
+
+/* Product 8 (Sales Automator) - Space Grotesk display over DM Sans body */
+.font-app-grotesk {
+  font-family: var(--font-space-grotesk), var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+}
+

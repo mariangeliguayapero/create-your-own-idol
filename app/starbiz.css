@@ -1,0 +1,307 @@
+/* ==========================================================================
+   Product 3 — Starbiz ("Create Your Own Idol", /3)
+   Pixel-clone helpers for components/factory/layouts/SocialIdolLayout.tsx.
+   Every rule is scoped under .starbiz-root so no other product is affected.
+   Reference: create-your-own-idol.lovable.app (tokens lifted verbatim).
+   Fonts: self-hosted in ../public/fonts (genuine Google woff2), declared
+   below and exposed via --font-starbiz-* on .starbiz-root.
+   ========================================================================== */
+
+/* ---------------- fonts (self-hosted Barlow) ----------------
+
+   Forensics summary (measured, not guessed): the reference site ships NO
+   webfonts for Bebas Neue / Barlow — its <h1> etc. render in whatever
+   "Bebas Neue" resolves to on the viewer's machine, falling through to
+   Barlow otherwise. On the current dev machine there is no desktop Bebas,
+   so ALL reference display text visibly renders in BARLOW metrics (e.g.
+   hero line rects 456/350/704 px @136px inside a 723px container, h1 box
+   351px = 3 lines). Google's current v16 webfont cut is narrower (540px for
+   the same string) and produces DIFFERENT wrapping — bundling it broke
+   parity. Therefore the display variable below intentionally mirrors the
+   reference stack: bare "Bebas Neue" first (machines that DO have the
+   desktop font stay in lockstep with the reference), falling through to
+   Barlow exactly like the reference does. next/font is not used for
+   Starbiz at all; its downloader was also returning corrupt bytes here. */
+
+@font-face {
+  font-family: "SB Barlow";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/barlow-400-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "SB Barlow";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/barlow-500-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "SB Barlow";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/barlow-600-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "SB Barlow";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/barlow-700-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+.starbiz-root {
+  /* Mirrors the reference font stacks exactly (see the forensics note at
+     the top of this file): bare family names, Barlow self-hosted below as
+     a metric-identical fallback for machines without it installed. */
+  --font-starbiz-display: "Bebas Neue";
+  --font-starbiz-body: "Barlow", "SB Barlow";
+
+  /* Palette — HSL triplets copied from the reference :root */
+  --sb-primary: 351 80% 64%; /* coral   #ED5A70 */
+  --sb-primary-glow: 0 100% 71%; /* hot     #FF6B6B */
+  --sb-primary-deep: 342 46% 52%; /* deep    #BD4C6E */
+  --sb-accent: 253 31% 43%; /* purple  #5A4C90 */
+  --sb-background: 240 9% 4%; /* page    #09090B */
+  --sb-foreground: 0 0% 98%; /* text    #FAFAFA */
+  --sb-card: 240 8% 8%; /* panels  #131316 */
+  --sb-muted-fg: 240 5% 62%;
+  --radius: 0.75rem;
+
+  background-color: hsl(var(--sb-background));
+  color: hsl(var(--sb-foreground));
+  font-family: var(--font-starbiz-body), system-ui, sans-serif;
+  /* Reference lets blurred glow orbs bleed past the viewport; clip instead
+     of scrolling so 390px phones never get a horizontal scrollbar. */
+  overflow-x: clip;
+}
+
+/* ---------------- typography helpers ---------------- */
+
+/* Wrapped in @layer components so layered Tailwind v4 utilities
+   (tracking-widest, plus the implicit line-height of the text-size
+   utilities) win the cascade exactly like on the reference build. Unlayered
+   author styles beat ALL utilities, which previously forced 0.005em
+   tracking / 0.86 leading onto every element using this class regardless
+   of its utility classes. */
+@layer components {
+  .starbiz-root .text-display {
+    font-family: var(--font-starbiz-display), "Barlow", system-ui, sans-serif;
+    letter-spacing: 0.005em;
+    line-height: 0.86;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+}
+
+/* Same @layer components treatment as .text-display above: without it, this
+   unlayered rule's line-height:1 beat Tailwind's text-size utilities
+   (text-2xl pairs 24px type with a 32px line box). The reference keeps that
+   pairing on .text-headline headings (measured h3 = fs24/lh32), which is
+   what sizes the creative-step cards (+8px per card) — utilities must win. */
+@layer components {
+  .starbiz-root .text-headline {
+    font-family: var(--font-starbiz-display), "Barlow", system-ui, sans-serif;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+}
+
+.starbiz-root .eyebrow {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+}
+
+.starbiz-root .font-700 {
+  font-weight: 700;
+}
+
+/* ------- token color utilities (the repo's Tailwind theme has no
+           primary/accent/card colors; define them scoped instead) ------- */
+
+.starbiz-root .text-primary { color: hsl(var(--sb-primary)); }
+.starbiz-root .bg-primary { background-color: hsl(var(--sb-primary)); }
+.starbiz-root .bg-primary\/5 { background-color: hsl(var(--sb-primary) / 0.05); }
+.starbiz-root .bg-primary\/80 { background-color: hsl(var(--sb-primary) / 0.8); }
+.starbiz-root .border-primary\/30 { border-color: hsl(var(--sb-primary) / 0.3); }
+.starbiz-root .border-primary\/40 { border-color: hsl(var(--sb-primary) / 0.4); }
+.starbiz-root .border-primary\/50 { border-color: hsl(var(--sb-primary) / 0.5); }
+
+.starbiz-root .text-muted-foreground { color: hsl(var(--sb-muted-fg)); }
+.starbiz-root .text-muted-foreground\/60 { color: hsl(var(--sb-muted-fg) / 0.6); }
+.starbiz-root .bg-muted-foreground { background-color: hsl(var(--sb-muted-fg)); }
+
+.starbiz-root .bg-background { background-color: hsl(var(--sb-background)); }
+.starbiz-root .bg-card { background-color: hsl(var(--sb-card)); }
+.starbiz-root .bg-card\/40 { background-color: hsl(var(--sb-card) / 0.4); }
+.starbiz-root .hover\:bg-card:hover { background-color: hsl(var(--sb-card)); }
+
+.starbiz-root .text-foreground { color: hsl(var(--sb-foreground)); }
+.starbiz-root .text-foreground\/80 { color: hsl(var(--sb-foreground) / 0.8); }
+.starbiz-root .text-foreground\/90 { color: hsl(var(--sb-foreground) / 0.9); }
+
+.starbiz-root .bg-accent\/10 { background-color: hsl(var(--sb-accent) / 0.1); }
+.starbiz-root .border-accent\/30 { border-color: hsl(var(--sb-accent) / 0.3); }
+.starbiz-root .bg-accent { background-color: hsl(var(--sb-accent)); }
+
+.starbiz-root .hover\:text-foreground:hover { color: hsl(var(--sb-foreground)); }
+
+/* ---------------- decorative helpers ---------------- */
+
+.starbiz-root .glow-coral {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(120px);
+  pointer-events: none;
+}
+
+.starbiz-root .hairline-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+.starbiz-root .text-gradient-coral {
+  background-image: linear-gradient(
+    135deg,
+    hsl(var(--sb-primary-glow)),
+    hsl(var(--sb-primary)),
+    hsl(var(--sb-primary-deep))
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.starbiz-root .shadow-glass-lg {
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
+}
+
+.starbiz-root .glass-card-dark {
+  background: rgba(10, 10, 12, 0.6);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  border-radius: var(--radius);
+}
+
+/* ---------------- buttons ---------------- */
+
+.starbiz-root .btn-primary {
+  position: relative;
+  overflow: hidden;
+  background: hsl(var(--sb-primary));
+  color: hsl(0 0% 100%);
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 15px 40px -12px hsl(var(--sb-primary) / 0.6);
+}
+
+.starbiz-root .btn-primary::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.35),
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.starbiz-root .btn-primary:hover {
+  background: hsl(var(--sb-primary-glow));
+  box-shadow: 0 20px 50px -12px hsl(var(--sb-primary-glow) / 0.7);
+  transform: translateY(-1px);
+}
+
+.starbiz-root .btn-primary:hover::after {
+  transform: translateX(120%);
+}
+
+.starbiz-root .btn-ghost-white {
+  background: transparent;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgb(255, 255, 255);
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.starbiz-root .btn-ghost-white:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: translateY(-1px);
+}
+
+/* ---------------- motion ---------------- */
+
+@keyframes starbizFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.starbiz-root .animate-fade-in-up {
+  animation: starbizFadeInUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.starbiz-root .stagger-1 { animation-delay: 0.1s; opacity: 0; }
+.starbiz-root .stagger-2 { animation-delay: 0.2s; opacity: 0; }
+.starbiz-root .stagger-3 { animation-delay: 0.3s; opacity: 0; }
+.starbiz-root .stagger-4 { animation-delay: 0.4s; opacity: 0; }
+.starbiz-root .stagger-5 { animation-delay: 0.5s; opacity: 0; }
+.starbiz-root .stagger-6 { animation-delay: 0.6s; opacity: 0; }
+
+@keyframes starbizFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.starbiz-root .animate-float {
+  animation: starbizFloat 4s ease-in-out infinite;
+}
